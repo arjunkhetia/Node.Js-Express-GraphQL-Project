@@ -25,6 +25,44 @@ Start Express.js app at `http://localhost:3000/`:
 $ npm start
 ```
 
+GraphQL server will start at `http://localhost:3000/graphql`, query:
+
+```bash
+query {
+  status
+}
+
+mutation {
+  createUser(first_name: "Arjun", last_name: "Khetia", email: "arjun@gmail.com", gender: "Male") {
+    id,
+    first_name,
+    last_name,
+    email,
+    gender
+  }
+}
+
+query {
+  getAllUsers {
+    id,
+    first_name,
+    last_name,
+    email,
+    gender
+  }
+}
+
+query {
+  getUser(id: 1) {
+    id,
+    first_name,
+    last_name,
+    email,
+    gender
+  }
+}
+```
+
 # Nodemon
 
 Nodemon will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application.
