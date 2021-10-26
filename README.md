@@ -27,7 +27,7 @@ $ npm start
 
 GraphQL server will start at `http://localhost:3000/graphql`, query:
 
-```bash
+```js
 query {
   status
 }
