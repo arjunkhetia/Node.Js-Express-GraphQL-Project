@@ -3,7 +3,7 @@ var express = require("express");
 var path = require("path");
 var favicon = require("serve-favicon");
 var cookieParser = require("cookie-parser");
-var hbs = require("express-handlebars");
+var { create } = require('express-handlebars');
 var logger = require("morgan");
 var loggerutil = require("./utilities/logger");
 var datalogger = require("./utilities/datalogger");
@@ -96,43 +96,39 @@ const webServer = app.listen(PORT, () => {
 });
 
 // Express Status Monitor for monitoring server status
-app.use(
-  require("express-status-monitor")({
-    title: "Server Status",
-    path: "/status",
-    // websocket: existingSocketIoInstance,
-    spans: [
-      {
-        interval: 1,
-        retention: 60,
-      },
-      {
-        interval: 5,
-        retention: 60,
-      },
-      {
-        interval: 15,
-        retention: 60,
-      },
-    ],
-    chartVisibility: {
-      cpu: true,
-      mem: true,
-      load: true,
-      responseTime: true,
-      rps: true,
-      statusCodes: true,
-    },
-    healthChecks: [
-      {
-        protocol: "http",
-        host: "localhost",
-        path: "/",
-        port: "3000",
-      },
-    ],
-  })
-);
+app.use(require('express-status-monitor')({
+  title: 'Server Status',
+  path: '/status',
+  // socketPath: '/socket.io', // In case you use a custom path for socket.io
+  // websocket: existingSocketIoInstance,
+  spans: [{
+    interval: 1,
+    retention: 60
+  }, {
+    interval: 5,
+    retention: 60
+  }, {
+    interval: 15,
+    retention: 60
+  }],
+  chartVisibility: {
+    cpu: true,
+    mem: true,
+    load: true,
+    eventLoop: true,
+    heap: true,
+    responseTime: true,
+    rps: true,
+    statusCodes: true
+  },
+  healthChecks: [{
+    protocol: 'http',
+    host: 'localhost',
+    path: '/',
+    port: '3000'
+  }],
+  // ignoreStartsWith: '/admin'
+}));
 
 // compress all responses
 app.use(compression());
@@ -155,16 +151,14 @@ fs.appendFile("./log/ServerData.log", "", function (err) {
 });
 
 // view engine setup - Express-Handlebars
-app.engine(
-  "hbs",
-  hbs({
-    extname: "hbs",
-    defaultLayout: "layout",
-    layoutsDir: __dirname + "/views/",
-  })
-);
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "hbs");
+const hbs = create({
+  extname: '.hbs',
+  defaultLayout: 'layout',
+  layoutsDir: __dirname + '/views/'
+});
+app.engine('hbs', hbs.engine);
+app.set('view engine', '.hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Create a rotating write stream
 var accessLogStream = rfs.createStream("Server.log", {

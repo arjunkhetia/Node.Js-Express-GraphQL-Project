@@ -1,4 +1,4 @@
-# Node-Express-GraphQL Project   ![Version][version-image]
+# Node Express GraphQL Project   ![Version][version-image]
 
 ![Linux Build][linuxbuild-image]
 ![Windows Build][windowsbuild-image]
@@ -177,11 +177,16 @@ app.use(require('express-status-monitor')({
   spans: [{
     interval: 1, // every second
     retention: 60 // keep 60 datapoints in memory
+  }, {
+    interval: 5, // every 5 seconds
+    retention: 60
   }],
   chartVisibility: {
     cpu: true, // enable CPU Usage
     mem: true, // enable Memory Usage
     load: true, // enable One Minute Load Avg
+    eventLoop: true, // enable EventLoop Precess Usage
+    heap: true, // enable Heap Memory Usage
     responseTime: true, // enable Response Time
     rps: true, // enable Requests per Second
     statusCodes: true // enable Status Codes
@@ -191,11 +196,12 @@ app.use(require('express-status-monitor')({
     host: 'localhost' // server host name
     path: '/users', // endpoint to check status
     port: '3000' // server port
-  }] // health check will be considered successful if the endpoint returns a 200 status code
+  }], // health check will be considered successful if the endpoint returns a 200 status code
+  ignoreStartsWith: '/admin' // ignore path starts with
 }));
 ```
 
-![Monitoring Page](https://github.com/arjunkhetia/Node.Js-Express-Project/blob/master/public/status-monitor.png "Monitoring Page")
+![Monitoring Page](https://github.com/arjunkhetia/Node.Js-Express-GraphQL-Project/blob/main/public/status-monitor.png "Monitoring Page")
 
 [version-image]: https://img.shields.io/badge/Version-1.0.0-orange.svg
 [linuxbuild-image]: https://img.shields.io/badge/Linux-passing-brightgreen.svg
